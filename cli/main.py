@@ -73,7 +73,7 @@ if __name__ == "__main__":
     current_dir = Path(__file__).parent
 
     # Path to your JSON file
-    file_path = current_dir / ".." / "data" / "conversations.json"
+    file_path = current_dir / "conversations.json"
 
     # Load the data
     data = load_data(file_path)

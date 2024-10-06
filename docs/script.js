@@ -2,7 +2,7 @@
 document.getElementById('search-button').addEventListener('click', () => {
     const keyword = document.getElementById('search-input').value.toLowerCase();
 
-    fetch('data/conversations.json')
+    fetch('conversations.json')
         .then(response => response.json())
         .then(data => searchConversations(keyword, data))
         .catch(error => console.error('Error loading JSON:', error));
