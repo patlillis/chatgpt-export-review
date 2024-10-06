@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 from rich.console import Console
@@ -69,20 +70,40 @@ def display_results_tui(results):
 
 
 if __name__ == "__main__":
-    # Get the directory where the script is located
-    current_dir = Path(__file__).parent
+    # Set up argparse to take in the file path and keyword
+    parser = argparse.ArgumentParser(
+        description="Search conversations from a JSON file."
+    )
+    parser.add_argument(
+        "-f",
+        "--file",
+        type=str,
+        required=True,
+        help="Path to the conversations.json file",
+    )
+    parser.add_argument(
+        "-k",
+        "--keyword",
+        type=str,
+        required=True,
+        help="Keyword to search for in conversations",
+    )
 
-    # Path to your JSON file
-    file_path = current_dir / "conversations.json"
+    # Parse arguments
+    args = parser.parse_args()
+
+    # Get the directory where the script is located
+    file_path = Path(args.file)
 
     # Load the data
-    data = load_data(file_path)
-
-    # Get the keyword from user input
-    keyword = input("Enter a keyword to search for: ")
+    if file_path.exists():
+        data = load_data(file_path)
+    else:
+        print(f"Error: File '{file_path}' not found.")
+        exit(1)
 
     # Search for the keyword in conversations
-    search_results = search_conversations(keyword, data)
+    search_results = search_conversations(args.keyword, data)
 
     # Display the results in TUI style
     display_results_tui(search_results)

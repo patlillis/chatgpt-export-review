@@ -10,7 +10,13 @@
 
 <body>
     <h1>Search ChatGPT Conversations</h1>
-    <form id="search">
+
+    <h2>Upload Your Conversations JSON</h2>
+    <input type="file" id="fileInput" accept=".json">
+    <button id="loadFile">Load Data</button>
+    <p id="fileName"></p>
+
+    <form id="search" style="display:none;">
         <input type="text" name="keyword" placeholder="Enter keyword...">
         <button type="submit">Search</button>
     </form>

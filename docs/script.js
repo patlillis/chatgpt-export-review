@@ -1,3 +1,27 @@
+let conversationsData = null; // To store user-uploaded data
+
+document.getElementById('loadFile').addEventListener('click', function () {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                conversationsData = JSON.parse(e.target.result);  // Parse the JSON
+                document.getElementById('fileName').innerText = `Loaded: ${file.name}`;
+                document.getElementById('search').style.display = 'block'; // Show search UI
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                alert('Invalid JSON file.');
+            }
+        };
+        reader.readAsText(file);  // Read the file as text
+    } else {
+        alert('Please select a file to load.');
+    }
+});
+
 // Load the JSON file and handle search
 document.getElementById('search').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -5,10 +29,7 @@ document.getElementById('search').addEventListener('submit', (e) => {
     const formData = new FormData(e.target);
     const keyword = formData.get('keyword').toLowerCase()
 
-    fetch('conversations.json')
-        .then(response => response.json())
-        .then(data => searchConversations(keyword, data))
-        .catch(error => console.error('Error loading JSON:', error));
+    searchConversations(keyword, conversationsData);
 });
 
 function searchConversations(keyword, data) {
