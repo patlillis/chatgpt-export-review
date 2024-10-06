@@ -1,6 +1,9 @@
 // Load the JSON file and handle search
-document.getElementById('search-button').addEventListener('click', () => {
-    const keyword = document.getElementById('search-input').value.toLowerCase();
+document.getElementById('search').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const keyword = formData.get('keyword').toLowerCase()
 
     fetch('conversations.json')
         .then(response => response.json())
@@ -9,11 +12,6 @@ document.getElementById('search-button').addEventListener('click', () => {
 });
 
 function searchConversations(keyword, data) {
-    const resultsDiv = document.getElementById('results');
-
-    // Clear previous results.
-    resultsDiv.innerHTML = '';
-
     // Find matching messages.
     const results = [];
     for (const conversation of data) {
@@ -38,19 +36,27 @@ function searchConversations(keyword, data) {
         }
     }
 
+    // Clear previous results.
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
     // Display results
+    resultsDiv.innerHTML = '<h2>Results</h2>';
+
     if (results.length > 0) {
         for (const result of results) {
+            const conversationUrl = `https://chatgpt.com/chat/${result.conversationId}`;
             const resultDiv = document.createElement('div');
             resultDiv.classList.add('result');
-            resultDiv.innerHTML = `
+            resultDiv.innerHTML += `
                 <h3>${result.title}</h3>
                 <p>${result.message}</p>
                 <small>Conversation ID: ${result.conversationId}, Message ID: ${result.messageId}</small>
-            `;
+                <br>
+                <a href="${conversationUrl}" target="_blank">Open Conversation</a>`;
             resultsDiv.appendChild(resultDiv);
         }
     } else {
-        resultsDiv.innerHTML = '<p>No results found.</p>';
+        resultsDiv.innerHTML += `<p>No results found.</p>`;
     }
 }
